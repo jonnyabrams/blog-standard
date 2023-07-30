@@ -2,15 +2,36 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import Post from "../models/post";
+import FeaturedPost from "../models/featuredPost";
 
 const secretKey = process.env.SECRET_KEY as string;
+
+const FEATURED_POST_COUNT = 4;
+
+// not an Express route handler so can't give req, res & next
+const addToFeaturedPosts = async (postId: string) => {
+  const featuredPost = new FeaturedPost({ post: postId });
+  try {
+    await featuredPost.save();
+
+    // remove the oldest featured post to keep just 4 at any one time
+    const featuredPosts = await FeaturedPost.find().sort({ createdAt: -1 });
+    featuredPosts.forEach(async (post, index) => {
+      if (index >= FEATURED_POST_COUNT) {
+        await FeaturedPost.findByIdAndDelete(post._id);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const createPost = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { title, content, meta, slug, tags } = req.body;
+  const { title, content, meta, slug, tags, featured } = req.body;
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
@@ -27,8 +48,9 @@ export const createPost = async (
     });
 
     try {
-      const savedPost = await post.save();
-      res.status(201).json(savedPost);
+      const newPost = await post.save();
+      if (featured) await addToFeaturedPosts(newPost._id.toString());
+      res.status(201).json(newPost);
     } catch (error: any) {
       next(error);
     }
