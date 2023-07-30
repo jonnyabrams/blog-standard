@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 
 import { createPost } from "../controllers/post";
 import upload from "../middleware/multer";
@@ -10,6 +10,13 @@ const router = express.Router();
 router.post(
   "/create",
   upload.single("thumbnail"),
+  // parse tags as array for Postman/Thunderclient form data
+  (req: Request, res: Response, next: NextFunction) => {
+    const { tags } = req.body;
+    if (tags) req.body.tags = JSON.parse(tags);
+
+    next();
+  },
   postValidator,
   validate,
   createPost

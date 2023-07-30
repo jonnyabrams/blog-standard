@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 import Post from "../models/post";
 import FeaturedPost from "../models/featuredPost";
+import cloudinary from "../cloud";
 
 const secretKey = process.env.SECRET_KEY as string;
 
@@ -49,10 +50,12 @@ export const createPost = async (
     });
 
     try {
-      // if (file) {
-
-      // }
-      return console.log(file)
+      if (file) {
+        const { secure_url, public_id } = await cloudinary.uploader.upload(
+          file.path
+        );
+        post.thumbnail = { url: secure_url, public_id };
+      }
 
       const newPost = await post.save();
 
