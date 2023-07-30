@@ -2,7 +2,7 @@
 
 TS node setup: https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
-1:29 if tags type issue
+1:59:23
 
 TODO:
 

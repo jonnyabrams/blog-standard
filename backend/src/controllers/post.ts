@@ -32,6 +32,7 @@ export const createPost = async (
   next: NextFunction
 ) => {
   const { title, content, meta, slug, tags, featured } = req.body;
+  const { file } = req;
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
@@ -48,7 +49,13 @@ export const createPost = async (
     });
 
     try {
+      // if (file) {
+
+      // }
+      return console.log(file)
+
       const newPost = await post.save();
+
       if (featured) await addToFeaturedPosts(newPost._id.toString());
       res.status(201).json(newPost);
     } catch (error: any) {
