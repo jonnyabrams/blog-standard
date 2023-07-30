@@ -10,6 +10,11 @@ const secretKey = process.env.SECRET_KEY as string;
 
 const FEATURED_POST_COUNT = 4;
 
+const checkIfLoggedIn = (req: Request, res: Response) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+}
+
 // not an Express route handler so can't give req, res & next
 const addToFeaturedPosts = async (postId: string) => {
   const alreadyExists = await FeaturedPost.findOne({ post: postId });
@@ -41,6 +46,8 @@ export const createPost = async (
   res: Response,
   next: NextFunction
 ) => {
+  checkIfLoggedIn(req, res)
+  
   const { title, content, meta, slug, tags, featured } = req.body;
   const { file } = req;
 
@@ -89,6 +96,8 @@ export const deletePost = async (
   res: Response,
   next: NextFunction
 ) => {
+  checkIfLoggedIn(req, res)
+
   const { postId } = req.params;
 
   // if not a valid id
@@ -116,6 +125,9 @@ export const updatePost = async (
   res: Response,
   next: NextFunction
 ) => {
+  
+  checkIfLoggedIn(req, res)
+
   const { title, content, meta, slug, tags, featured } = req.body;
   const { file } = req;
   const { postId } = req.params;
