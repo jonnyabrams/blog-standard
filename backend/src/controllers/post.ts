@@ -34,6 +34,13 @@ export const createPost = async (
 ) => {
   const { title, content, meta, slug, tags, featured } = req.body;
   const { file } = req;
+
+  // to stop img getting uploaded before save() throws duplicate error
+  const alreadyExists = await Post.findOne({ slug: req.body.slug });
+  if (alreadyExists) {
+    return res.status(401).json({ error: "Please use a unique slug" });
+  }
+
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
