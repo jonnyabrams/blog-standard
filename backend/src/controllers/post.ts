@@ -43,7 +43,7 @@ export const createPost = async (
 ) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-  
+
   const { title, content, meta, slug, tags, featured } = req.body;
   const { file } = req;
 
@@ -91,7 +91,7 @@ export const deletePost = async (
 ) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-  
+
   const { postId } = req.params;
 
   // if not a valid id
@@ -101,17 +101,23 @@ export const deletePost = async (
   const post = await Post.findById(postId);
   if (!post) return res.status(404).json({ error: "Post not found" });
 
-  // delete thumbnail from cloudinary
-  const public_id = post.thumbnail?.public_id;
-  if (public_id) {
-    const { result } = await cloudinary.uploader.destroy(public_id);
+  jwt.verify(token, secretKey, async (err: any, userInfo: any) => {
+    if (post.authorId === userInfo.id) {
+      // delete thumbnail from cloudinary
+      const public_id = post.thumbnail?.public_id;
+      if (public_id) {
+        const { result } = await cloudinary.uploader.destroy(public_id);
 
-    if (result !== "ok")
-      return res.status(404).json({ error: "Could not remove thumbnail" });
-  }
+        if (result !== "ok")
+          return res.status(404).json({ error: "Could not remove thumbnail" });
+      }
 
-  await Post.findByIdAndDelete(postId);
-  res.json({ message: "Post deleted successfully" });
+      await Post.findByIdAndDelete(postId);
+      res.json({ message: "Post deleted successfully" });
+    } else {
+      res.status(403).json("You can only delete your own account!");
+    }
+  });
 };
 
 export const updatePost = async (
@@ -121,47 +127,59 @@ export const updatePost = async (
 ) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-  
-  const { title, content, meta, slug, tags, featured } = req.body;
-  const { file } = req;
-  const { postId } = req.params;
 
-  if (!isValidObjectId(postId))
-    return res.status(401).json({ error: "Invalid request" });
+  jwt.verify(token, secretKey, async (err: any, userInfo: any) => {
+    if (err) return res.status(403).json("Token is not valid!");
 
-  const post = await Post.findById(postId);
-  if (!post) return res.status(404).json({ error: "Post not found" });
+    const { title, content, meta, slug, tags, authorId, featured } = req.body;
+    const { file } = req;
+    const { postId } = req.params;
 
-  // if thumbnail, remove old thumbnail from cloud
-  const public_id = post.thumbnail?.public_id;
-  if (public_id && file) {
-    const { result } = await cloudinary.uploader.destroy(public_id);
+    if (!isValidObjectId(postId))
+      return res.status(401).json({ error: "Invalid request" });
 
-    if (result !== "ok")
-      return res.status(404).json({ error: "Could not remove thumbnail" });
-  }
+      console.log(req.body)
+      console.log(userInfo.id)
 
-  if (file) {
-    const { secure_url, public_id } = await cloudinary.uploader.upload(
-      file.path,
-      { folder: "rn-blog" }
-    );
-    post.thumbnail = { url: secure_url, public_id };
-  }
+    if (authorId == userInfo.id) {
+      const post = await Post.findById(postId);
+      if (!post) return res.status(404).json({ error: "Post not found" });
 
-  post.title = title;
-  post.meta = meta;
-  post.content = content;
-  post.slug = slug;
-  post.tags = tags;
+      // if thumbnail, remove old thumbnail from cloud
+      const public_id = post.thumbnail?.public_id;
+      if (public_id && file) {
+        const { result } = await cloudinary.uploader.destroy(public_id);
 
-  if (featured) {
-    await addToFeaturedPosts(post._id.toString());
-  } else {
-    await removeFromFeaturedPosts(post._id);
-  }
+        if (result !== "ok")
+          return res.status(404).json({ error: "Could not remove thumbnail" });
+      }
 
-  await post.save();
+      if (file) {
+        const { secure_url, public_id } = await cloudinary.uploader.upload(
+          file.path,
+          { folder: "rn-blog" }
+        );
+        post.thumbnail = { url: secure_url, public_id };
+      }
 
-  res.json({ post, featured });
+      post.title = title;
+      post.meta = meta;
+      post.content = content;
+      post.slug = slug;
+      post.authorId = authorId;
+      post.tags = tags;
+
+      if (featured) {
+        await addToFeaturedPosts(post._id.toString());
+      } else {
+        await removeFromFeaturedPosts(post._id);
+      }
+
+      await post.save();
+
+      res.json({ post, featured });
+    } else {
+      res.status(403).json("You can only update your own account!");
+    }
+  });
 };
