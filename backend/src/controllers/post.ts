@@ -52,7 +52,8 @@ export const createPost = async (
     try {
       if (file) {
         const { secure_url, public_id } = await cloudinary.uploader.upload(
-          file.path
+          file.path,
+          { folder: "rn-blog" }
         );
         post.thumbnail = { url: secure_url, public_id };
       }
