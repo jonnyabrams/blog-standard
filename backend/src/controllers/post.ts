@@ -11,6 +11,10 @@ const FEATURED_POST_COUNT = 4;
 
 // not an Express route handler so can't give req, res & next
 const addToFeaturedPosts = async (postId: string) => {
+  const alreadyExists = await FeaturedPost.findOne({ post: postId });
+
+  if (alreadyExists) return;
+
   const featuredPost = new FeaturedPost({ post: postId });
   try {
     await featuredPost.save();
