@@ -3,12 +3,14 @@ import express, { NextFunction, Request, Response } from "express";
 import { createPost, deletePost, updatePost } from "../controllers/post";
 import upload from "../middleware/multer";
 import { postValidator, validate } from "../middleware/postValidator";
+import checkAuth from "../middleware/checkToken";
 
 const router = express.Router();
 
 // validator has to go after multer for there to be form data in req.body
 router.post(
   "/create",
+  checkAuth,
   upload.single("thumbnail"),
   // parse tags as array for Postman/Thunderclient form data
   (req: Request, res: Response, next: NextFunction) => {
@@ -24,6 +26,7 @@ router.post(
 
 router.put(
   "/:postId",
+  checkAuth,
   upload.single("thumbnail"),
   // parse tags as array for Postman/Thunderclient form data
   (req: Request, res: Response, next: NextFunction) => {
@@ -37,6 +40,6 @@ router.put(
   updatePost
 );
 
-router.delete("/:postId", deletePost)
+router.delete("/:postId", checkAuth, deletePost);
 
 export default router;
