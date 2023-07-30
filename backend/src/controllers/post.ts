@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
 import Post from "../models/post";
 import FeaturedPost from "../models/featuredPost";
@@ -30,6 +30,10 @@ const addToFeaturedPosts = async (postId: string) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const removeFromFeaturedPosts = async (postId: mongoose.Types.ObjectId) => {
+  await FeaturedPost.findOneAndDelete({ post: postId });
 };
 
 export const createPost = async (
@@ -105,4 +109,53 @@ export const deletePost = async (
 
   await Post.findByIdAndDelete(postId);
   res.json({ message: "Post deleted successfully" });
+};
+
+export const updatePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { title, content, meta, slug, tags, featured } = req.body;
+  const { file } = req;
+  const { postId } = req.params;
+
+  if (!isValidObjectId(postId))
+    return res.status(401).json({ error: "Invalid request" });
+
+  const post = await Post.findById(postId);
+  if (!post) return res.status(404).json({ error: "Post not found" });
+
+  // if thumbnail, remove old thumbnail from cloud
+  const public_id = post.thumbnail?.public_id;
+  if (public_id && file) {
+    const { result } = await cloudinary.uploader.destroy(public_id);
+
+    if (result !== "ok")
+      return res.status(404).json({ error: "Could not remove thumbnail" });
+  }
+
+  if (file) {
+    const { secure_url, public_id } = await cloudinary.uploader.upload(
+      file.path,
+      { folder: "rn-blog" }
+    );
+    post.thumbnail = { url: secure_url, public_id };
+  }
+
+  post.title = title;
+  post.meta = meta;
+  post.content = content;
+  post.slug = slug;
+  post.tags = tags;
+
+  if (featured) {
+    await addToFeaturedPosts(post._id.toString());
+  } else {
+    await removeFromFeaturedPosts(post._id);
+  }
+
+  await post.save();
+
+  res.json({ post, featured });
 };
