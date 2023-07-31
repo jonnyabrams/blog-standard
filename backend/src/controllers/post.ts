@@ -193,3 +193,30 @@ export const getFeaturedPosts = async (
     next(error);
   }
 };
+
+export const getLatestPosts = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  // default values as they're optional, parse as they come as strings from query
+  const { pageNumber = 0, limit = 10 } = req.query;
+
+  // fix error by definitively converting them to string
+  const parsedPageNumber = parseInt(pageNumber.toString());
+  const parsedLimit = parseInt(limit.toString());
+
+  try {
+    // skip for pagination - ie. pageNumber 0 * limit 10 will equal
+    // 0 and therefore skip none - pageNumber 1 * limit 10 skips first 10
+    // then 2 * 10 skips first 20 and so on
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(parsedPageNumber * parsedLimit)
+      .limit(parsedLimit);
+
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
