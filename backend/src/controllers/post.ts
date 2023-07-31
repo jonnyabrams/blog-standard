@@ -125,7 +125,7 @@ export const updatePost = async (
     const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    const alreadyExists = await Post.findOne({ slug });
+    const alreadyExists = await Post.findOne({ slug, _id: { $ne: post._id } });
     if (alreadyExists) {
       return res.status(401).json({ error: "Please use a unique slug" });
     }
@@ -173,6 +173,7 @@ export const getPost = async (
   next: NextFunction
 ) => {
   const { postId } = req.params;
+  const { featured } = req.body;
 
   if (!isValidObjectId(postId))
     return res.status(401).json({ error: "Invalid request" });
@@ -180,5 +181,5 @@ export const getPost = async (
   const post = await Post.findById(postId);
   if (!post) return res.status(404).json({ error: "Post not found" });
 
-  res.json({ post });
+  res.json({ featured: featured });
 };
