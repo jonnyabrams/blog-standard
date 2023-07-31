@@ -7,6 +7,7 @@ import {
   getPost,
   getFeaturedPosts,
   getLatestPosts,
+  searchPosts
 } from "../controllers/post";
 import upload from "../middleware/multer";
 import { postValidator, validate } from "../middleware/postValidator";
@@ -52,5 +53,6 @@ router.delete("/:postId", checkAuth, deletePost);
 router.get("/single/:postId", getPost);
 router.get("/featured-posts", getFeaturedPosts);
 router.get("/latest-posts", getLatestPosts);
+router.get("/search", searchPosts);
 
 export default router;

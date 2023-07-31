@@ -220,3 +220,22 @@ export const getLatestPosts = async (
     next(error);
   }
 };
+
+export const searchPosts = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { title } = req.query;
+  if (!title?.toString().trim())
+    return res.status(401).json({ error: "Search query is missing!" });
+
+  try {
+    // fetch all data matching title, case insensitively
+    const posts = await Post.find({ title: { $regex: title, $options: "i" } });
+
+    res.json(posts)
+  } catch (error) {
+    next(error);
+  }
+};
