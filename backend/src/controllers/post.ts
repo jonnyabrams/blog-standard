@@ -238,3 +238,31 @@ export const searchPosts = async (
     next(error);
   }
 };
+
+export const getRelatedPosts = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { postId } = req.params;
+  if (!isValidObjectId(postId))
+    return res.status(401).json({ error: "Invalid request" });
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    const relatedPosts = await Post.find({
+      // fetch all posts with matching tags
+      tags: { $in: [...post.tags] },
+      // exclude same post
+      _id: { $ne: post._id },
+    })
+      .sort("-createdAt") // alternative syntax for ({createdAt: -1})
+      .limit(5);
+
+    res.json(relatedPosts);
+  } catch (error) {
+    next(error);
+  }
+};

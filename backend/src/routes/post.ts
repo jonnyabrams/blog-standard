@@ -7,7 +7,8 @@ import {
   getPost,
   getFeaturedPosts,
   getLatestPosts,
-  searchPosts
+  searchPosts,
+  getRelatedPosts
 } from "../controllers/post";
 import upload from "../middleware/multer";
 import { postValidator, validate } from "../middleware/postValidator";
@@ -54,5 +55,6 @@ router.get("/single/:slug", getPost);
 router.get("/featured-posts", getFeaturedPosts);
 router.get("/latest-posts", getLatestPosts);
 router.get("/search", searchPosts);
+router.get("/related/:postId", getRelatedPosts);
 
 export default router;
