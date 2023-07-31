@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import { isValidObjectId } from "mongoose";
 
 import Post from "../models/post";
+import FeaturedPost from "../models/featuredPost";
 import cloudinary from "../cloud";
 import { AuthRequest } from "../middleware/checkToken";
 import {
@@ -103,20 +104,24 @@ export const updatePost = async (
     if (authorId === userInfo?.id) {
       const post = await Post.findById(postId);
       if (!post) return res.status(404).json({ error: "Post not found" });
-  
-      const alreadyExists = await Post.findOne({ slug, _id: { $ne: post._id } });
+
+      const alreadyExists = await Post.findOne({
+        slug,
+        _id: { $ne: post._id },
+      });
       if (alreadyExists) {
         return res.status(401).json({ error: "Please use a unique slug" });
       }
-  
+
       // if thumbnail, remove old thumbnail from cloud
       const public_id = post.thumbnail?.public_id;
       if (public_id && file) {
         const { result } = await cloudinary.uploader.destroy(public_id);
-  
-        if (result !== "ok") console.log({ error: "Could not remove thumbnail" });
+
+        if (result !== "ok")
+          console.log({ error: "Could not remove thumbnail" });
       }
-  
+
       if (file) {
         const { secure_url, public_id } = await cloudinary.uploader.upload(
           file.path,
@@ -124,28 +129,28 @@ export const updatePost = async (
         );
         post.thumbnail = { url: secure_url, public_id };
       }
-  
+
       post.title = title;
       post.meta = meta;
       post.content = content;
       post.slug = slug;
       post.authorId = authorId;
       post.tags = tags;
-  
+
       if (featured) {
         await addToFeaturedPosts(post._id.toString());
       } else {
         await removeFromFeaturedPosts(post._id);
       }
-  
+
       await post.save();
-  
+
       res.json({ post, featured });
     } else {
       res.status(403).json("You can only update your own account!");
     }
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -159,10 +164,31 @@ export const getPost = async (
   if (!isValidObjectId(postId))
     return res.status(401).json({ error: "Invalid request" });
 
-  const post = await Post.findById(postId);
-  if (!post) return res.status(404).json({ error: "Post not found" });
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-  const featured = await isFeaturedPost(post._id);
+    const featured = await isFeaturedPost(post._id);
 
-  res.json({ post, featured });
+    res.json({ post, featured });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getFeaturedPosts = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // populate('post') retrieves the corresponding Post obj instead of the FeaturedPost record
+    const featuredPosts = await FeaturedPost.find()
+      .sort({ createdAt: -1 })
+      .populate("post");
+
+    res.json({ posts: featuredPosts });
+  } catch (error) {
+    next(error);
+  }
 };
