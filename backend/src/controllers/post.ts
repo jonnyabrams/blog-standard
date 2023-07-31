@@ -160,13 +160,12 @@ export const getPost = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { postId } = req.params;
+  const { slug } = req.params;
 
-  if (!isValidObjectId(postId))
-    return res.status(401).json({ error: "Invalid request" });
+  if (!slug) return res.status(401).json({ error: "Invalid request" });
 
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findOne({ slug });
     if (!post) return res.status(404).json({ error: "Post not found" });
 
     const featured = await isFeaturedPost(post._id);
@@ -234,7 +233,7 @@ export const searchPosts = async (
     // fetch all data matching title, case insensitively
     const posts = await Post.find({ title: { $regex: title, $options: "i" } });
 
-    res.json(posts)
+    res.json(posts);
   } catch (error) {
     next(error);
   }

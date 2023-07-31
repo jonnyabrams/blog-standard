@@ -50,7 +50,7 @@ router.put(
 
 router.delete("/:postId", checkAuth, deletePost);
 // 'single' to stop invalid error with each /featured-posts request
-router.get("/single/:postId", getPost);
+router.get("/single/:slug", getPost);
 router.get("/featured-posts", getFeaturedPosts);
 router.get("/latest-posts", getLatestPosts);
 router.get("/search", searchPosts);
