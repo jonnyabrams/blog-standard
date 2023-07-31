@@ -266,3 +266,19 @@ export const getRelatedPosts = async (
     next(error);
   }
 };
+
+export const uploadImage = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { file } = req;
+  if (!file) return res.status(401).json({ error: "Image file is missing!" });
+
+  // rename secure_url to url this time, just for reminder that can be done
+  const { secure_url: url } = await cloudinary.uploader.upload(file.path, {
+    folder: "rn-blog",
+  });
+
+  res.status(201).json({ image: url });
+};
