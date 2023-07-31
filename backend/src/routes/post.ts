@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 
-import { createPost, deletePost, updatePost } from "../controllers/post";
+import { createPost, deletePost, updatePost, getPost } from "../controllers/post";
 import upload from "../middleware/multer";
 import { postValidator, validate } from "../middleware/postValidator";
 import checkAuth from "../middleware/checkToken";
@@ -41,5 +41,6 @@ router.put(
 );
 
 router.delete("/:postId", checkAuth, deletePost);
+router.get("/:postId", getPost)
 
 export default router;

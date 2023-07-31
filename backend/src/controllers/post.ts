@@ -46,7 +46,7 @@ export const createPost = async (
   const { file, userInfo } = req;
 
   // to stop img getting uploaded before save() throws duplicate error
-  const alreadyExists = await Post.findOne({ slug: req.body.slug });
+  const alreadyExists = await Post.findOne({ slug });
   if (alreadyExists) {
     return res.status(401).json({ error: "Please use a unique slug" });
   }
@@ -99,8 +99,7 @@ export const deletePost = async (
     if (public_id) {
       const { result } = await cloudinary.uploader.destroy(public_id);
 
-      if (result !== "ok")
-        return res.status(404).json({ error: "Could not remove thumbnail" });
+      if (result !== "ok") console.log({ error: "Could not remove thumbnail" });
     }
 
     await Post.findByIdAndDelete(postId);
@@ -126,13 +125,17 @@ export const updatePost = async (
     const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ error: "Post not found" });
 
+    const alreadyExists = await Post.findOne({ slug });
+    if (alreadyExists) {
+      return res.status(401).json({ error: "Please use a unique slug" });
+    }
+
     // if thumbnail, remove old thumbnail from cloud
     const public_id = post.thumbnail?.public_id;
     if (public_id && file) {
       const { result } = await cloudinary.uploader.destroy(public_id);
 
-      if (result !== "ok")
-        return res.status(404).json({ error: "Could not remove thumbnail" });
+      if (result !== "ok") console.log({ error: "Could not remove thumbnail" });
     }
 
     if (file) {
@@ -162,4 +165,20 @@ export const updatePost = async (
   } else {
     res.status(403).json("You can only update your own account!");
   }
+};
+
+export const getPost = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { postId } = req.params;
+
+  if (!isValidObjectId(postId))
+    return res.status(401).json({ error: "Invalid request" });
+
+  const post = await Post.findById(postId);
+  if (!post) return res.status(404).json({ error: "Post not found" });
+
+  res.json({ post });
 };
