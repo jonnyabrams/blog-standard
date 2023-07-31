@@ -1,5 +1,7 @@
 # React Native/Node Blog
 
+With React admin panel for web
+
 TS node setup: https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
 TODO:
