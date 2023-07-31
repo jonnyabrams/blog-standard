@@ -37,6 +37,11 @@ const removeFromFeaturedPosts = async (postId: mongoose.Types.ObjectId) => {
   await FeaturedPost.findOneAndDelete({ post: postId });
 };
 
+const isFeaturedPost = async (postId: mongoose.Types.ObjectId) => {
+  const post = await FeaturedPost.findOne({ post: postId });
+  return post ? true : false;
+};
+
 export const createPost = async (
   req: AuthRequest,
   res: Response,
@@ -173,7 +178,6 @@ export const getPost = async (
   next: NextFunction
 ) => {
   const { postId } = req.params;
-  const { featured } = req.body;
 
   if (!isValidObjectId(postId))
     return res.status(401).json({ error: "Invalid request" });
@@ -181,5 +185,7 @@ export const getPost = async (
   const post = await Post.findById(postId);
   if (!post) return res.status(404).json({ error: "Post not found" });
 
-  res.json({ featured: featured });
+  const featured = await isFeaturedPost(post._id);
+
+  res.json({ post, featured });
 };
