@@ -1,46 +1,10 @@
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import mongoose, { isValidObjectId } from "mongoose";
+import { NextFunction, Response } from "express";
+import { isValidObjectId } from "mongoose";
 
 import Post from "../models/post";
-import FeaturedPost from "../models/featuredPost";
 import cloudinary from "../cloud";
 import { AuthRequest } from "../middleware/checkToken";
-
-const secretKey = process.env.SECRET_KEY as string;
-
-const FEATURED_POST_COUNT = 4;
-
-// not an Express route handler so can't give req, res & next
-const addToFeaturedPosts = async (postId: string) => {
-  const alreadyExists = await FeaturedPost.findOne({ post: postId });
-
-  if (alreadyExists) return;
-
-  const featuredPost = new FeaturedPost({ post: postId });
-  try {
-    await featuredPost.save();
-
-    // remove the oldest featured post to keep just 4 at any one time
-    const featuredPosts = await FeaturedPost.find().sort({ createdAt: -1 });
-    featuredPosts.forEach(async (post, index) => {
-      if (index >= FEATURED_POST_COUNT) {
-        await FeaturedPost.findByIdAndDelete(post._id);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const removeFromFeaturedPosts = async (postId: mongoose.Types.ObjectId) => {
-  await FeaturedPost.findOneAndDelete({ post: postId });
-};
-
-const isFeaturedPost = async (postId: mongoose.Types.ObjectId) => {
-  const post = await FeaturedPost.findOne({ post: postId });
-  return post ? true : false;
-};
+import { addToFeaturedPosts, isFeaturedPost, removeFromFeaturedPosts } from "../helpers";
 
 export const createPost = async (
   req: AuthRequest,
