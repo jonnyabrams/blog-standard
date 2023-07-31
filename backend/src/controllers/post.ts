@@ -78,7 +78,7 @@ export const deletePost = async (
           console.log({ error: "Could not remove thumbnail" });
       }
 
-      await removeFromFeaturedPosts(postId)
+      await removeFromFeaturedPosts(postId);
       await Post.findByIdAndDelete(postId);
       res.json({ message: "Post deleted successfully" });
     } else {
@@ -188,7 +188,7 @@ export const getFeaturedPosts = async (
       .sort({ createdAt: -1 })
       .populate("post");
 
-    res.json({ posts: featuredPosts });
+    res.json({ posts: featuredPosts.map((post) => post.post) });
   } catch (error) {
     next(error);
   }
