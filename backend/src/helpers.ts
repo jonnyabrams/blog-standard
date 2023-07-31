@@ -37,7 +37,7 @@ export const addToFeaturedPosts = async (postId: string) => {
 };
 
 export const removeFromFeaturedPosts = async (
-  postId: mongoose.Types.ObjectId
+  postId: mongoose.Types.ObjectId | string
 ) => {
   await FeaturedPost.findOneAndDelete({ post: postId });
 };

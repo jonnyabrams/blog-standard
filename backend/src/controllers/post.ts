@@ -78,6 +78,7 @@ export const deletePost = async (
           console.log({ error: "Could not remove thumbnail" });
       }
 
+      await removeFromFeaturedPosts(postId)
       await Post.findByIdAndDelete(postId);
       res.json({ message: "Post deleted successfully" });
     } else {
