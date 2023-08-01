@@ -4,7 +4,7 @@ With React admin panel for web
 
 TS node setup: https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
-TODO:
+BACKEND TODO:
 
 * err/userInfo types in checkToken (currently any)
 * refactor res.send.json ?
