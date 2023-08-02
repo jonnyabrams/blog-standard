@@ -9,7 +9,7 @@ interface INavItem {
 }
 
 const NavItem = ({ to, text, icon }: INavItem) => {
-  const commonClasses = "flex items-center space-x-2 w-full p-2 block";
+  const commonClasses = "flex items-center space-x-2 w-full p-2 block whitespace-nowrap";
   const activeClasses = `${commonClasses} bg-blue-500 text-white`;
   const inactiveClasses = `${commonClasses} text-gray-500`;
 
