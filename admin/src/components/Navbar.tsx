@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { AiOutlineHome, AiFillFileAdd } from "react-icons/ai";
+import { AiFillHome, AiFillFileAdd } from "react-icons/ai";
 import { ReactNode } from "react";
 
 interface INavItem {
@@ -12,8 +12,8 @@ interface INavItem {
 const NavItem = ({ to, text, icon, closed }: INavItem) => {
   const commonClasses =
     "flex items-center space-x-2 w-full p-2 block whitespace-nowrap";
-  const activeClasses = `${commonClasses} bg-blue-500 text-white`;
-  const inactiveClasses = `${commonClasses} text-gray-500`;
+  const activeClasses = `${commonClasses} font-bold`;
+  const inactiveClasses = `${commonClasses} text-gray-400`;
 
   return (
     <NavLink
@@ -44,7 +44,7 @@ const Navbar = ({ closed }: { closed: boolean }) => {
             closed={closed}
             to="/"
             text="Home"
-            icon={<AiOutlineHome size={24} />}
+            icon={<AiFillHome size={24} />}
           />
         </li>
         <li>

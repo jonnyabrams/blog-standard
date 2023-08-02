@@ -21,7 +21,7 @@ const App = () => {
   return (
     <div className="flex">
       {/* nav section  */}
-      <div className={`${getNavWidth()} h-screen bg-red-400 transition-width`}>
+      <div className={`${getNavWidth()} h-screen transition-width`}>
         <Navbar closed={closedNav} />
       </div>
 
