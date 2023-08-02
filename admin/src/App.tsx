@@ -8,7 +8,7 @@ import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
-import Searchbar from "./components/Searchbar";
+import Header from "./components/Header";
 
 const App = () => {
   const [closedNav, setClosedNav] = useState(false);
@@ -32,18 +32,7 @@ const App = () => {
 
       {/* content section */}
       <div className="flex-1 min-h-screen">
-        <div className="sticky top-0">
-          <div className="flex items-center p-2">
-            <button onClick={toggleNav}>
-              {closedNav ? (
-                <AiOutlineMenuUnfold size={25} />
-              ) : (
-                <AiOutlineMenuFold size={25} />
-              )}
-            </button>
-            <Searchbar />
-          </div>
-        </div>
+        <Header toggleNav={toggleNav} closedNav={closedNav} />
 
         <div className="max-w-screen-lg mx-auto">
           <Routes>
