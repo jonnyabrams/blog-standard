@@ -22,7 +22,7 @@ const App = () => {
     <div className="flex">
       {/* nav section  */}
       <div className={`${getNavWidth()} h-screen bg-red-400 transition-width`}>
-        <Navbar />
+        <Navbar closed={closedNav} />
       </div>
 
       {/* content section */}
