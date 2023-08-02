@@ -23,7 +23,7 @@ const App = () => {
     <div className="flex">
       {/* nav section  */}
       <div
-        className={`${getNavWidth()} h-screen transition-width border border-r`}
+        className={`${getNavWidth()} min-h-screen transition-width border border-r`}
       >
         <div className="sticky top-0">
           <Navbar closed={closedNav} />
@@ -32,18 +32,20 @@ const App = () => {
 
       {/* content section */}
       <div className="flex-1 min-h-screen">
-        <div className="flex items-center p-2">
-          <button onClick={toggleNav}>
-            {closedNav ? (
-              <AiOutlineMenuUnfold size={25} />
-            ) : (
-              <AiOutlineMenuFold size={25} />
-            )}
-          </button>
-          <Searchbar />
+        <div className="sticky top-0">
+          <div className="flex items-center p-2">
+            <button onClick={toggleNav}>
+              {closedNav ? (
+                <AiOutlineMenuUnfold size={25} />
+              ) : (
+                <AiOutlineMenuFold size={25} />
+              )}
+            </button>
+            <Searchbar />
+          </div>
         </div>
 
-        <div className="max-w-screen-lg mx-auto overflow-y-auto max-h-screen">
+        <div className="max-w-screen-lg mx-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create-post" element={<CreatePost />} />
