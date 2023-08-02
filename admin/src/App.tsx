@@ -8,6 +8,7 @@ import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
+import Searchbar from "./components/Searchbar";
 
 const App = () => {
   const [closedNav, setClosedNav] = useState(false);
@@ -21,19 +22,22 @@ const App = () => {
   return (
     <div className="flex">
       {/* nav section  */}
-      <div className={`${getNavWidth()} h-screen transition-width`}>
+      <div className={`${getNavWidth()} h-screen transition-width border border-r`}>
         <Navbar closed={closedNav} />
       </div>
 
       {/* content section */}
-      <div className="flex-1 min-h-screen bg-blue-400">
-        <button onClick={toggleNav}>
-          {closedNav ? (
-            <AiOutlineMenuUnfold size={25} />
-          ) : (
-            <AiOutlineMenuFold size={25} />
-          )}
-        </button>
+      <div className="flex-1 min-h-screen">
+        <div className="flex items-center p-2">
+          <button onClick={toggleNav}>
+            {closedNav ? (
+              <AiOutlineMenuUnfold size={25} />
+            ) : (
+              <AiOutlineMenuFold size={25} />
+            )}
+          </button>
+          <Searchbar />
+        </div>
 
         <div className="max-w-screen-lg mx-auto">
           <Routes>
