@@ -1,13 +1,28 @@
+import { useState } from "react";
+import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+
 const App = () => {
+  const [closedNav, setClosedNav] = useState(false);
+
+  const toggleNav = () => {
+    setClosedNav(!closedNav);
+  };
+
+  const getNavWidth = () => (closedNav ? "w-16" : "w-56");
+
   return (
     <div className="flex">
       {/* nav section  */}
-      <div className="w-56 h-screen bg-red-400"></div>
+      <div className={getNavWidth() + " h-screen bg-red-400"}></div>
 
       {/* content section */}
       <div className="flex-1 min-h-screen bg-blue-400">
-        <button>
-          
+        <button onClick={toggleNav}>
+          {closedNav ? (
+            <AiOutlineMenuUnfold size={25} />
+          ) : (
+            <AiOutlineMenuFold size={25} />
+          )}
         </button>
       </div>
     </div>
