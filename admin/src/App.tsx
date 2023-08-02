@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { Route, Routes } from "react-router-dom";
 
 import "./App.css";
@@ -21,14 +20,7 @@ const App = () => {
 
   return (
     <div className="flex">
-      {/* nav section  */}
-      <div
-        className={`${getNavWidth()} min-h-screen transition-width border border-r`}
-      >
-        <div className="sticky top-0">
-          <Navbar closed={closedNav} />
-        </div>
-      </div>
+      <Navbar closed={closedNav} getNavWidth={getNavWidth} />
 
       {/* content section */}
       <div className="flex-1 min-h-screen">

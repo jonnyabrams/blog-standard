@@ -9,6 +9,11 @@ interface INavItem {
   icon: ReactNode;
 }
 
+interface INavbar {
+  closed: boolean;
+  getNavWidth: () => string;
+}
+
 const NavItem = ({ to, text, icon, closed }: INavItem) => {
   const commonClasses =
     "flex items-center space-x-2 w-full p-2 block whitespace-nowrap";
@@ -35,31 +40,37 @@ const NavItem = ({ to, text, icon, closed }: INavItem) => {
   );
 };
 
-const Navbar = ({ closed }: { closed: boolean }) => {
+const Navbar = ({ closed, getNavWidth }: INavbar) => {
   return (
-    <nav>
-      <div className="p-3">
-        <img className="w-14" src="bs-logo.png" alt="" />
+    <div
+      className={`${getNavWidth()} min-h-screen transition-width border border-r`}
+    >
+      <div className="sticky top-0">
+        <nav>
+          <div className="p-3">
+            <img className="w-14" src="bs-logo.png" alt="" />
+          </div>
+          <ul>
+            <li>
+              <NavItem
+                closed={closed}
+                to="/"
+                text="Home"
+                icon={<AiFillHome size={24} />}
+              />
+            </li>
+            <li>
+              <NavItem
+                closed={closed}
+                to="/create-post"
+                text="Create Post"
+                icon={<AiFillFileAdd size={24} />}
+              />
+            </li>
+          </ul>
+        </nav>
       </div>
-      <ul>
-        <li>
-          <NavItem
-            closed={closed}
-            to="/"
-            text="Home"
-            icon={<AiFillHome size={24} />}
-          />
-        </li>
-        <li>
-          <NavItem
-            closed={closed}
-            to="/create-post"
-            text="Create Post"
-            icon={<AiFillFileAdd size={24} />}
-          />
-        </li>
-      </ul>
-    </nav>
+    </div>
   );
 };
 

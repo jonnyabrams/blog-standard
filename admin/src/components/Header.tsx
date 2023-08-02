@@ -3,7 +3,7 @@ import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import Searchbar from "./Searchbar";
 
 interface IHeader {
-  toggleNav: any;
+  toggleNav: () => void;
   closedNav: boolean;
 }
 
