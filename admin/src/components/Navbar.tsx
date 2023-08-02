@@ -38,6 +38,9 @@ const NavItem = ({ to, text, icon, closed }: INavItem) => {
 const Navbar = ({ closed }: { closed: boolean }) => {
   return (
     <nav>
+      <div className="p-3">
+        <img className="w-14" src="bs-logo.png" alt="" />
+      </div>
       <ul>
         <li>
           <NavItem
