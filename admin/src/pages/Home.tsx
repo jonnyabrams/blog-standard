@@ -1,20 +1,23 @@
-import { useEffect } from "react";
-import { getPosts } from "../api/post";
+import { useQuery } from "@tanstack/react-query";
+import client from "../api/client";
 
 let pageNumber = 0;
 const POST_LIMIT = 9;
 
 const Home = () => {
-  const fetchPosts = async () => {
-    const data = await getPosts(pageNumber, POST_LIMIT);
+  const {
+    isLoading,
+    error,
+    data: posts,
+  } = useQuery(["posts", pageNumber, POST_LIMIT], () =>
+    client
+      .get(`/posts/latest-posts?pageNumber=${pageNumber}&limit=${POST_LIMIT}`)
+      .then((res) => {
+        return res.data;
+      })
+  );
 
-
-    console.log(data);
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  console.log(posts);
 
   return (
     <div>
