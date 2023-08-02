@@ -261,7 +261,7 @@ export const getRelatedPosts = async (
       .sort("-createdAt") // alternative syntax for ({createdAt: -1})
       .limit(5);
 
-    res.json(relatedPosts);
+    res.json({ posts: relatedPosts });
   } catch (error) {
     next(error);
   }
