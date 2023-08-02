@@ -1,7 +1,15 @@
 const App = () => {
   return (
-    <div>
-      <h1 className="text-red-700">HELLO WORLD</h1>
+    <div className="flex">
+      {/* nav section  */}
+      <div className="w-56 h-screen bg-red-400"></div>
+
+      {/* content section */}
+      <div className="flex-1 min-h-screen bg-blue-400">
+        <button>
+          
+        </button>
+      </div>
     </div>
   );
 };
