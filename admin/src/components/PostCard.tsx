@@ -11,13 +11,13 @@ const PostCard = ({ post }: IPostCard) => {
   const { title, thumbnail, tags, meta, createdAt, slug } = post;
 
   return (
-    <div className="bg-white shadow-sm rounded">
+    <div className="bg-white shadow-sm rounded flex flex-col">
       <img
         className="rounded-t"
         src={thumbnail?.url || "default.jpeg"}
         alt={title}
       />
-      <div className="p-2">
+      <div className="p-2 flex-1 flex flex-col justify-between">
         <h1 className="text-lg font-semibold text-gray-700">{title}</h1>
         <p className="text-gray-500 line-clamp-2">{meta}</p>
         <div className="flex flex-col md:flex-row justify-between">
