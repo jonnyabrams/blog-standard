@@ -26,7 +26,9 @@ const Home = () => {
         ? "Something went wrong"
         : isLoading
         ? "Loading..."
-        : posts.map((post: PostType) => <PostCard post={post} />)}
+        : posts.map((post: PostType) => (
+            <PostCard post={post} key={post._id} />
+          ))}
     </div>
   );
 };

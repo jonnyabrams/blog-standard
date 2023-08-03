@@ -10,8 +10,11 @@ const PostCard = ({ post }: IPostCard) => {
 
   return (
     <div>
-      <img src={thumbnail?.url || 'default.jpeg'} alt={title} />
+      <img src={thumbnail?.url || "default.jpeg"} alt={title} />
       <h1>{title}</h1>
+      <p>{meta}</p>
+      <p>{createdAt.toString()}</p>
+      <p>{tags.join(", ")}</p>
     </div>
   );
 };
