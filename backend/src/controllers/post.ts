@@ -214,7 +214,8 @@ export const getLatestPosts = async (
       .skip(parsedPageNumber * parsedLimit)
       .limit(parsedLimit);
 
-    res.json(posts);
+    const postCount = await Post.countDocuments();
+    res.json({ posts, postCount });
   } catch (error) {
     next(error);
   }
