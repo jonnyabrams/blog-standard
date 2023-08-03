@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+
 import client from "../api/client";
+import { PostType } from "../typings";
 
 let pageNumber = 0;
 const POST_LIMIT = 9;
@@ -17,11 +19,13 @@ const Home = () => {
       })
   );
 
-  console.log(posts);
-
   return (
     <div>
-      <h1>Home</h1>
+      {error
+        ? "Something went wrong"
+        : isLoading
+        ? "Loading..."
+        : posts.map((post: PostType) => <div>{post.title}</div>)}
     </div>
   );
 };

@@ -15,3 +15,4 @@ ADMIN:
 
 * layout?
 * navbar expander button to sit on border
+* loading spinner
