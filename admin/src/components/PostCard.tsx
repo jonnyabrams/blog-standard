@@ -18,7 +18,8 @@ const PostCard = ({ post }: IPostCard) => {
   return (
     <div className="bg-white shadow-sm rounded flex flex-col">
       <img
-        className="rounded-t"
+        // aspect-video makes it landscape
+        className="rounded-t aspect-video"
         src={thumbnail?.url || "default.jpeg"}
         alt={title}
       />
