@@ -1,5 +1,6 @@
 import dateFormat from "dateformat";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 import { PostType } from "../typings";
 
@@ -32,9 +33,12 @@ const PostCard = ({ post }: IPostCard) => {
         </div>
       </div>
       <div className="flex space-x-3 ml-2 mb-2">
-        <button className={`${iconClasses} bg-blue-400 hover:bg-blue-600`}>
+        <Link
+          to={`/update-post/${slug}`}
+          className={`${iconClasses} bg-blue-400 hover:bg-blue-600`}
+        >
           <BsPencilSquare />
-        </button>
+        </Link>
         <button
           className={`${iconClasses} text-white w-8 h-8 rounded-full bg-red-400 hover:bg-red-600`}
         >
