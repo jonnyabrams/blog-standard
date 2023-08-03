@@ -6,7 +6,7 @@ export type PostType = {
   meta: string;
   slug: string;
   tags: string[];
-  thumbnail: { public_id: string; url: string };
+  thumbnail?: { public_id: string; url: string };
   title: string;
   updatedAt: Date;
 };

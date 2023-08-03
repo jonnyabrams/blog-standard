@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import client from "../api/client";
 import { PostType } from "../typings";
+import PostCard from "../components/PostCard";
 
 let pageNumber = 0;
 const POST_LIMIT = 9;
@@ -20,12 +21,12 @@ const Home = () => {
   );
 
   return (
-    <div>
+    <div className="grid grid-cols-3 gap-3">
       {error
         ? "Something went wrong"
         : isLoading
         ? "Loading..."
-        : posts.map((post: PostType) => <div>{post.title}</div>)}
+        : posts.map((post: PostType) => <PostCard post={post} />)}
     </div>
   );
 };
