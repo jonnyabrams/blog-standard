@@ -1,3 +1,5 @@
+import dateFormat from "dateformat";
+
 import { PostType } from "../typings";
 
 interface IPostCard {
@@ -13,7 +15,7 @@ const PostCard = ({ post }: IPostCard) => {
       <img src={thumbnail?.url || "default.jpeg"} alt={title} />
       <h1>{title}</h1>
       <p>{meta}</p>
-      <p>{createdAt.toString()}</p>
+      <p>{dateFormat(createdAt, "mediumDate")}</p>
       <p>{tags.join(", ")}</p>
     </div>
   );
