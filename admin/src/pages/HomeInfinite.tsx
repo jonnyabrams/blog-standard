@@ -12,6 +12,7 @@ const fetchPosts = async (page: number) => {
   const response = await client.get(
     `/posts/latest-posts?pageNumber=${page}&limit=${POST_LIMIT}`
   );
+  console.log(response.data)
   return response.data;
 };
 
@@ -19,12 +20,12 @@ const HomeInfinite = () => {
   const { data, error, isLoading, isSuccess, hasNextPage, fetchNextPage } =
     useInfiniteQuery(
       ["infinitePosts"],
-      ({ pageParam = 1 }) => fetchPosts(pageParam),
+      ({ pageParam = 0 }) => fetchPosts(pageParam),
       {
         getNextPageParam: (lastPage, allPages) => {
           // if lastPage post count is less than limit, it should be last one
           if (lastPage.posts.length < POST_LIMIT) return undefined;
-          const nextPage = allPages.length + 1;
+          const nextPage = allPages.length;
           return nextPage;
         },
       }
