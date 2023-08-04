@@ -54,7 +54,10 @@ export const login = async (req: Request, res: Response) => {
         id: user[0]._id,
         username: user[0].username,
       },
-      process.env.SECRET_KEY as string
+      process.env.SECRET_KEY as string,
+      {
+        expiresIn: "1hr",
+      }
     );
 
     // destructure out password
