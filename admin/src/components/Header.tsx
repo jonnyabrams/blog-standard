@@ -9,7 +9,7 @@ interface IHeader {
 
 const Header = ({ toggleNav, closedNav }: IHeader) => {
   return (
-    <div className="sticky top-0">
+    <div className="sticky top-0 bg-white">
       <div className="flex items-center p-2 space-x-2">
         <button onClick={toggleNav}>
           {closedNav ? (
