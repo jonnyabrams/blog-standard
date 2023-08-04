@@ -1,17 +1,18 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { AiFillHome, AiFillFileAdd } from "react-icons/ai";
 import { ReactNode } from "react";
 
+interface INavbar {
+  closed: boolean;
+  getNavWidth: () => string;
+  infiniteScroll: boolean;
+  setInfiniteScroll: React.Dispatch<React.SetStateAction<boolean>>;
+}
 interface INavItem {
   closed: boolean;
   to: string;
   text: string;
   icon: ReactNode;
-}
-
-interface INavbar {
-  closed: boolean;
-  getNavWidth: () => string;
 }
 
 const NavItem = ({ to, text, icon, closed }: INavItem) => {
@@ -40,7 +41,16 @@ const NavItem = ({ to, text, icon, closed }: INavItem) => {
   );
 };
 
-const Navbar = ({ closed, getNavWidth }: INavbar) => {
+const activeTextStyles = "text-blue-500 font-bold";
+
+const Navbar = ({
+  closed,
+  getNavWidth,
+  infiniteScroll,
+  setInfiniteScroll,
+}: INavbar) => {
+  const location = useLocation();
+
   return (
     <div
       className={`${getNavWidth()} min-h-screen transition-width border border-r`}
@@ -69,6 +79,26 @@ const Navbar = ({ closed, getNavWidth }: INavbar) => {
             </li>
           </ul>
         </nav>
+        {!closed && location.pathname === "/" && (
+          <div className="flex flex-col pt-10 pl-4 space-y-4 transition-width">
+            <span
+              className={`${
+                !infiniteScroll ? activeTextStyles : ""
+              } cursor-pointer text-sm transition-width overflow-hidden`}
+              onClick={() => setInfiniteScroll(false)}
+            >
+              · Paginated View
+            </span>
+            <span
+              className={`${
+                infiniteScroll ? activeTextStyles : ""
+              } cursor-pointer text-sm transition-width overflow-hidden`}
+              onClick={() => setInfiniteScroll(true)}
+            >
+              · Infinite Scroll
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

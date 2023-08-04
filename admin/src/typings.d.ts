@@ -10,3 +10,8 @@ export type PostType = {
   title: string;
   updatedAt: Date;
 };
+
+export type PageType = {
+  posts: PostType[];
+  postCount: number;
+};

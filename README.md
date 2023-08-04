@@ -4,6 +4,8 @@ A bog standard full-stack TypeScript blog with a Node backend, React web admin a
 
 TS node setup: https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
+useIniniteQuery: https://blog.openreplay.com/infinite-scrolling-with-react-query/
+
 BACKEND TODO:
 
 * err/userInfo types in checkToken (currently any)

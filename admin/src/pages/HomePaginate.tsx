@@ -8,7 +8,7 @@ import { getPaginationCount } from "../utils/getPaginationCount";
 let pageNumber = 0;
 const POST_LIMIT = 9;
 
-const Home = () => {
+const HomePaginate = () => {
   const { isLoading, error, data, refetch } = useQuery(
     ["posts", pageNumber, POST_LIMIT],
     () =>
@@ -67,4 +67,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePaginate;
