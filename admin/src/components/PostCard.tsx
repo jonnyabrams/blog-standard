@@ -3,12 +3,32 @@ import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 import { PostType } from "../typings";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import client from "../api/client";
 
 interface IPostCard {
   post: PostType;
 }
 
 const PostCard = ({ post }: IPostCard) => {
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation(
+    (postId: string) => {
+      return client.delete(`/posts/${postId}`);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts", "infinitePosts"]);
+      },
+    }
+  );
+
+  const handleDelete = () => {
+    deleteMutation.mutate(post._id);
+  };
+
   if (!post) return null;
   const { title, thumbnail, tags, meta, createdAt, slug } = post;
 
@@ -43,7 +63,7 @@ const PostCard = ({ post }: IPostCard) => {
         <button
           className={`${iconClasses} text-white w-8 h-8 rounded-full bg-red-400 hover:bg-red-600`}
         >
-          <BsTrash />
+          <BsTrash onClick={handleDelete} />
         </button>
       </div>
     </div>
