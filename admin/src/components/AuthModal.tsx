@@ -30,7 +30,7 @@ const AuthModal = () => {
         password,
       };
       try {
-        await client.post("/auth/register", newUser);
+        await client.post("auth/register", newUser);
         clearAllInputs();
         setIsLogin(true);
         setErr("");
@@ -54,7 +54,11 @@ const AuthModal = () => {
         }}
       >
         <div className="bg-white py-6 flex flex-col items-center">
-          <h1 className="pb-6">New to Blog Standard?</h1>
+          {isLogin ? (
+            <img className="w-[230px]" src="blog-standard-text.png" alt="" />
+          ) : (
+            <h1 className="pb-6">New to Blog Standard?</h1>
+          )}
           <span>{isLogin ? "LOG IN!" : "SIGN UP!"}</span>
         </div>
 

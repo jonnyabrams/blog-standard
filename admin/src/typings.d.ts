@@ -11,7 +11,33 @@ export type PostType = {
   updatedAt: Date;
 };
 
+export type UserType = {
+  username: string;
+  email: string;
+  password: string;
+  _id: string;
+  profilePic?: string;
+  coverPic?: string;
+  bio?: string;
+};
+
 export type PageType = {
   posts: PostType[];
   postCount: number;
+};
+
+type LoginType = {
+  email: string;
+  password: string;
+};
+
+type AuthContextType = {
+  currentUser: UserType;
+  login: (inputs: LoginType) => Promise<void>;
+  logout: () => void;
+  setCurrentUser: React.Dispatch<SetStateAction<UserType>>;
+};
+
+type AuthContextProviderType = {
+  children: JSX.Element | JSX.Element[];
 };
