@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,12 +12,13 @@ import Header from "./components/Header";
 import HomeInfinite from "./pages/HomeInfinite";
 import HomePaginate from "./pages/HomePaginate";
 import AuthModal from "./components/AuthModal";
+import { AuthContext } from "./context/AuthContext";
 
 const App = () => {
   const [closedNav, setClosedNav] = useState(false);
   const [infiniteScroll, setInfiniteScroll] = useState(false);
 
-  const currentUser = false;
+  const { currentUser } = useContext(AuthContext);
 
   const toggleNav = () => {
     setClosedNav(!closedNav);

@@ -21,17 +21,22 @@ export const AuthContextProvider = ({ children }: AuthContextProviderType) => {
       withCredentials: true,
     });
 
+    console.log(currentUser)
     setCurrentUser(res.data);
   };
 
   const logout = () => {
-    axios.post("http://localhost:8000/api/auth/logout");
+    client.post("auth/logout");
     setCurrentUser(null);
   };
 
   useEffect(() => {
-    // stringify because you can't store object in localStorage
-    localStorage.setItem("user", JSON.stringify(currentUser));
+    try {
+      // stringify because you can't store object in localStorage
+      localStorage.setItem("user", JSON.stringify(currentUser));
+    } catch (error) {
+      console.error("Error setting user in localStorage:", error);
+    }
   }, [currentUser]);
 
   return (

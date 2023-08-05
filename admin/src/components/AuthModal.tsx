@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import client from "../api/client";
+import { AuthContext } from "../context/AuthContext";
 
 const AuthModal = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -11,6 +12,8 @@ const AuthModal = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [err, setErr] = useState("");
 
+  const { login, currentUser } = useContext(AuthContext);
+
   const clearAllInputs = () => {
     setUsername("");
     setEmail("");
@@ -18,7 +21,21 @@ const AuthModal = () => {
     setConfirmPassword("");
   };
 
-  const handleClick = async (e: React.SyntheticEvent) => {
+  const handleLogin = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    const user = {
+      email,
+      password,
+    };
+    try {
+      await login(user);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const handleRegister = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -102,7 +119,7 @@ const AuthModal = () => {
 
           <button
             className="w-[50%] h-8 rounded text-white mt-8 bg-[var(--main-blue)] hover:text-[var(--main-blue)] hover:bg-white hover:border hover:border-[var(--main-blue)]"
-            onClick={handleClick}
+            onClick={isLogin ? handleLogin : handleRegister}
           >
             {isLogin ? "Log In" : "Register"}
           </button>
