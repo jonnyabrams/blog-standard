@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Mulish:wght@200;300;400;500;600;700;800;900;1000&display=swap");
 
-body, html {
-  font-family: 'Mulish', sans-serif;
+body,
+html {
+  font-family: "Mulish", sans-serif;
+  --main-blue: #151cda;
 }
 
 .transition-width {
