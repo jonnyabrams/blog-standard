@@ -32,7 +32,7 @@ type LoginType = {
 };
 
 type AuthContextType = {
-  currentUser: UserType;
+  currentUser: {user: UserType, token: string} | null;
   login: (inputs: LoginType) => Promise<void>;
   logout: () => void;
   setCurrentUser: React.Dispatch<SetStateAction<UserType>>;
