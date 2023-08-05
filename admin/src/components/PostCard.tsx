@@ -1,6 +1,7 @@
 import dateFormat from "dateformat";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { PostType } from "../typings";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,13 +21,19 @@ const PostCard = ({ post }: IPostCard) => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(["posts", "infinitePosts"]);
+        queryClient.invalidateQueries(["posts"]);
+        queryClient.invalidateQueries(["infinitePosts"]);
       },
     }
   );
 
   const handleDelete = () => {
-    deleteMutation.mutate(post._id);
+    let answer = window.confirm("Are you sure you want to delete this post?");
+
+    if (answer) {
+      deleteMutation.mutate(post._id);
+      toast("Post successfully deleted!");
+    }
   };
 
   if (!post) return null;
