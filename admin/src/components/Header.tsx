@@ -1,6 +1,6 @@
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { BiSolidLogOutCircle } from "react-icons/bi";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 
 import Searchbar from "./Searchbar";
 import { AuthContext } from "../context/AuthContext";
@@ -29,6 +29,26 @@ const Header = ({ toggleNav, closedNav }: IHeader) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { logout, currentUser } = useContext(AuthContext);
 
+  // close dropdown on outside click
+  let dropdownMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let handleOutsideClick = (e: Event) => {
+      if (
+        // is clicked element outside of dropdown container?
+        !dropdownMenuRef!.current!.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    // cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
     <div className="sticky top-0 bg-white flex justify-between items-center">
       <div className="flex items-center p-2 space-x-2">
@@ -41,7 +61,7 @@ const Header = ({ toggleNav, closedNav }: IHeader) => {
         </button>
         <Searchbar />
       </div>
-      <div>
+      <div ref={dropdownMenuRef}>
         <img
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="w-[50px] h-[50px] p-1 rounded-full cursor-pointer"
@@ -49,7 +69,9 @@ const Header = ({ toggleNav, closedNav }: IHeader) => {
           alt=""
         />
         {dropdownOpen && (
-          <div className="absolute flex flex-col items-center top-[50px] right-[0px] bg-white rounded-sm py-10 w-[200px] border border-gray-400 translate-y-0 transition duration-500 ease-in-out">
+          <div
+            className="absolute flex flex-col items-center top-[50px] right-[0px] bg-white rounded-sm py-10 w-[200px] border border-gray-400"
+          >
             <span className="text-2xl font-bold pb-4">
               {currentUser?.user.username}
             </span>
